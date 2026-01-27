@@ -1,83 +1,61 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Drone Spray Calculator</title>
-  <link rel="manifest" href="manifest.json">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 16px;
-      background: #f5f5f5;
-    }
-    h1 {
-      font-size: 20px;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      font-size: 16px;
-      margin-bottom: 12px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 6px;
-      text-align: center;
-      font-size: 14px;
-    }
-    th {
-      background: #e0e0e0;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drone Spray Calculator</title>
+<style>
+body { font-family: Arial; padding: 16px; background:#f5f5f5;}
+input { width: 100%; padding:8px; margin:6px 0; font-size:16px; }
+table { width: 100%; border-collapse: collapse; background:#fff;}
+th, td { border:1px solid #ccc; padding:6px; text-align:center;}
+th { background:#e0e0e0; }
+</style>
 </head>
 <body>
 
 <h1>Drone Spray Calculator</h1>
 
-<label>Spray Distance (m)</label>
-<input type="number" id="distance" placeholder="e.g. 100" />
+<label>Distance (m)</label>
+<input type="number" id="distance" placeholder="e.g. 100">
+<label>Total water (L)</label>
+<input type="number" id="totalWater" placeholder="e.g. 50">
 
 <table>
   <thead>
     <tr>
       <th>Speed (m/s)</th>
-      <th>Time (sec)</th>
+      <th>Flow rate (L/m)</th>
     </tr>
   </thead>
   <tbody id="result"></tbody>
 </table>
 
 <script>
-  const distanceInput = document.getElementById("distance");
-  const result = document.getElementById("result");
+const distanceInput = document.getElementById("distance");
+const waterInput = document.getElementById("totalWater");
+const result = document.getElementById("result");
 
-  distanceInput.addEventListener("input", () => {
-    const D = parseFloat(distanceInput.value);
-    result.innerHTML = "";
+function updateTable() {
+  const D = parseFloat(distanceInput.value);
+  const W = parseFloat(waterInput.value);
+  result.innerHTML = "";
+  if (!D || D <= 0 || !W || W <= 0) return;
 
-    if (!D || D <= 0) return;
+  const flowPerMeter = (W / D).toFixed(2);
 
-    for (let v = 1.0; v <= 3.0; v += 0.2) {
-      const time = (D / v).toFixed(1);
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${v.toFixed(1)}</td>
-        <td>${time}</td>
-      `;
-      result.appendChild(row);
-    }
-  });
-
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
+  for (let v = 1.0; v <= 3.0; v += 0.2) {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${v.toFixed(1)}</td>
+      <td>${flowPerMeter}</td>
+    `;
+    result.appendChild(row);
   }
+}
+
+distanceInput.addEventListener("input", updateTable);
+waterInput.addEventListener("input", updateTable);
 </script>
 
 </body>
