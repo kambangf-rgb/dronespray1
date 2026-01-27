@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Drone Spray Calculator</title>
 <style>
   body { font-family: sans-serif; padding: 16px; background:#f5f5f5; max-width: 500px; margin: auto; }
-  h1 { font-size: 1.2rem; color: #333; text-align: center; }
+  h1 { font-size: 1.4rem; color: #333; text-align: center; }
   .input-group { background: #fff; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
   label { display: block; margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
   input { width: 100%; padding:10px; margin:6px 0; font-size:16px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
   table { width: 100%; border-collapse: collapse; background:#fff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
   th, td { border:1px solid #eee; padding:12px; text-align:center;}
-  th { background:#007bff; color: white; }
+  th { background:#333; color: white; }
   tr:nth-child(even) { background: #f9f9f9; }
 </style>
 </head>
 <body>
 
-<h1>ドローン散布計算機</h1>
+<h1>Drone Spray Calculator</h1>
 
 <div class="input-group">
-  <label>散布距離 (m)</label>
-  <input type="number" id="distance" placeholder="例: 1000" step="10">
-  <label>総水量 (L)</label>
-  <input type="number" id="totalWater" placeholder="例: 10" step="0.5">
+  <label>Distance (m)</label>
+  <input type="number" id="distance" placeholder="e.g. 1000" step="10">
+  <label>Total Water (L)</label>
+  <input type="number" id="totalWater" placeholder="e.g. 10" step="0.1">
 </div>
 
 <table>
   <thead>
     <tr>
-      <th>速度 (m/s)</th>
-      <th>流量 (L/min)</th>
+      <th>Speed (m/s)</th>
+      <th>Flow Rate (L/min)</th>
     </tr>
   </thead>
   <tbody id="result"></tbody>
@@ -50,15 +50,15 @@ function updateTable() {
   
   if (!D || D <= 0 || !W || W <= 0) return;
 
-  // 速度 1.0m/s から 5.0m/s まで表示（範囲を少し広げました）
-  for (let v = 1.0; v <= 5.1; v += 0.5) {
-    // 計算式: (総水量 * 速度 * 60) / 距離
+  // Speed from 1.0 to 3.0 in steps of 0.2
+  for (let v = 1.0; v <= 3.05; v += 0.2) {
+    // Formula: (Total Water * Speed * 60 seconds) / Distance
     const flowRate = (W * v * 60) / D;
     
     const row = document.createElement("tr");
     row.innerHTML = `
       <td>${v.toFixed(1)}</td>
-      <td>**${flowRate.toFixed(2)}**</td>
+      <td><strong>${flowRate.toFixed(2)}</strong></td>
     `;
     result.appendChild(row);
   }
